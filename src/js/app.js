@@ -228,6 +228,14 @@ function handleGraphEzer(cfg,connectionString,count){
     return connectionString;
 }
 
+function returnChange(vizArray,cfg){
+    let index=-1;
+    for(let i=1;i<cfg.length-1;i++){
+        if(cfg[i].astNode.type=='ReturnStatement')
+            index=i;
+    }
+    vizArray[index-1]='n'+cfg[index].index+' [label="'+'('+cfg[index].index+')'+handleLet(escodegen.generate(cfg[index].astNode))+'",color='+'green'+',shape='+'square'+']\n';
+}
 function handleGraphNodes(cfg,init){
     let vizArray=[];
     let whileIs=isWhile(cfg[2]);
@@ -237,6 +245,7 @@ function handleGraphNodes(cfg,init){
         evalEzer(vizArray,cfg);
     }
     let connectionString='';
+    returnChange(vizArray,cfg[2]);
     connectionString=handleGraphEzer(cfg,connectionString,nullCounter);
     let final = arrayToString(vizArray)+connectionString;
     let string = 'digraph G {'+final+'}';
